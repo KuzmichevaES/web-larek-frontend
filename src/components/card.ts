@@ -1,4 +1,4 @@
-import { Component } from "./base/component";
+import { Component } from "./base/Component";
 import { ensureElement } from "../utils/utils";
 
 export interface ICardActions {
@@ -65,7 +65,8 @@ export class Card<T> extends Component<ICard<T>> {
         if (value === null) {
             this.setText(this._price, 'Бесценно');
             if (this._button) {
-                this.setText(this._button, 'Добавить в корзину')
+                this.setButtonState();
+                this.setText(this._button, 'Нельзя купить');
             }
         } else {
             this.setText(this._price, value + ' синапсов');
@@ -94,5 +95,9 @@ export class Card<T> extends Component<ICard<T>> {
 
     setButtonState() {
         this._button.setAttribute('disabled', '');
+    }
+
+    setSelectedProductButton() {
+        this.setText(this._button, 'Уже в корзине');
     }
 }

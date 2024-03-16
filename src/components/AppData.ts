@@ -1,7 +1,7 @@
-import { Model } from "./base/model";
+import { Model } from "./base/Model";
 import { IProduct, IAppState, IOrder, FormErrors, IOrderFormContacts } from "../types";
-import { Basket } from "./common/basket";
-import { Modal } from "./common/modal";
+import { Basket } from "./Basket";
+import { Modal } from "./common/Modal";
 
 export type CatalogChangeEvent = {
     catalog: IProduct[]

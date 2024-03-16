@@ -1,5 +1,5 @@
-import {ensureElement} from "../../utils/utils";
-import { Component } from "../base/component";
+import {ensureElement} from "../utils/utils";
+import { Component } from "./base/Component";
 
 interface ISuccess {
     totalPrice: number;
@@ -18,8 +18,8 @@ export class Success extends Component<ISuccess> {
 
         this._close = ensureElement<HTMLElement>('.order-success__close', this.container);
         this._totalPrice = ensureElement<HTMLElement>('.order-success__description', this.container);
-        this._totalPrice.textContent = `Списано ${total} синапсов`
-
+        this.setText(this._totalPrice, `Списано ${total} синапсов`);
+     
         if (actions?.onClick) {
             this._close.addEventListener('click', actions.onClick);
         }

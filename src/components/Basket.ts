@@ -1,8 +1,8 @@
-import { ensureElement, cloneTemplate } from "../../utils/utils";
-import { IProduct } from "..//..//types"
-import { Component } from "../base/component";
-import { EventEmitter } from "../base/events";
-import { ICardActions } from "../card";
+import { ensureElement, cloneTemplate } from "../utils/utils";
+import { IProduct } from "../types"
+import { Component } from "./base/Component";
+import { EventEmitter } from "./base/Events";
+import { ICardActions } from "./Card";
 
 export interface IBasketView {
     items: IProduct[];

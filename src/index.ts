@@ -3,14 +3,14 @@ import { API_URL, CDN_URL } from "./utils/constants";
 import { cloneTemplate, ensureElement } from "./utils/utils";
 import { LarekAPI } from "./components/LarekAPI";
 import { AppState, CatalogChangeEvent } from "./components/AppData";
-import { EventEmitter } from "./components/base/events";
-import { Page } from './components/page';
-import { Card } from './components/card';
+import { EventEmitter } from "./components/base/Events";
+import { Page } from './components/Page'
+import { Card } from './components/Card';
 import { IOrder, IOrderFormContacts, IProduct } from './types';
-import { Modal } from './components/common/modal';
-import { Basket } from './components/common/basket';
-import { OrderContact, OrderPaymentAddress } from './components/order';
-import { Success } from './components/common/success';
+import { Modal } from './components/common/Modal';
+import { Basket } from './components/Basket';
+import { OrderContact, OrderPaymentAddress } from './components/Order';
+import { Success } from './components/Success';
 
 const api = new LarekAPI(CDN_URL, API_URL);
 const events = new EventEmitter();
@@ -24,6 +24,7 @@ const basketTemplate = ensureElement<HTMLTemplateElement>('#basket');
 const orderFormTemplate = ensureElement<HTMLTemplateElement>('#order');
 const orderFormContactTemplate = ensureElement<HTMLTemplateElement>('#contacts'); 
 const successTemplate = ensureElement<HTMLTemplateElement>('#success'); 
+const basket = new Basket(cloneTemplate(basketTemplate), events);
 
 const appData = new AppState({}, events);
 const order = new OrderPaymentAddress (cloneTemplate(orderFormTemplate), events);
@@ -65,6 +66,7 @@ events.on('preview:changed', (item: IProduct) => {
 
     if(appData.isProductInBasket(item)) {
         card.setButtonState();
+        card.setSelectedProductButton();
     }
 });
 
@@ -84,8 +86,6 @@ events.on('itemsListBasket: changed', (basket: IProduct[]) => {
 });
 
 events.on('basket:open', () => {
-    const basket = new Basket(cloneTemplate(basketTemplate), events);
-
     appData.setBasket(modal, basket);
 });
 
@@ -124,19 +124,17 @@ events.on('contacts:submit', () => {
                 onClick: () => {
                     modal.close();
                     appData.clearBasket();
-                    //events.emit('auction:changed');
                 }}, appData.getTotal()
             );
 
             modal.render({
                 content: success.render({})
             });
+
+            appData.clearBasket();
         })
         .catch(err => {
             console.error(err);
-        })
-        .finally(() => {
-            appData.clearBasket();
         })
 });
 
@@ -154,7 +152,7 @@ events.on( /^contacts\..*:change/,
 });
 
  //Изменился адрес и способ оплаты
- events.on('order.address:change', (data: { value: string }) => { appData.setAddress(data.value);
+ events.on(/^order\..*:change/, (data: { value: string }) => { appData.setAddress(data.value);
  });
 
 // Изменилось состояние валидации формы
@@ -168,6 +166,4 @@ events.on('formErrors:change', (errors: Partial<IOrder>) => {
 
 api.getProductList()
     .then(appData.setCatalog.bind(appData))
-    .catch(err => {
-        console.error(err);
-    });
+    .catch(console.error);
