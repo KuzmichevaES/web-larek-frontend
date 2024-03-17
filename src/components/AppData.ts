@@ -84,18 +84,18 @@ export class AppState extends Model<IAppState> {
         this.emitChanges('preview:changed', item);
     };
 
-    setBasket(modal: Modal, basket: Basket): void {
-        modal.render({
-            content: basket.render({
-                items: this.basket,
-                total: this.getTotal()
-            })
-        });
+    // setBasket(modal: Modal, basket: Basket): void {
+    //     modal.render({
+    //         content: basket.render({
+    //             items: this.basket,
+    //             total: this.getTotal()
+    //         })
+    //     });
 
-        if (this.basket.length === 0) {
-            basket.setButtonState()
-        }
-    };
+    //     if (this.basket.length === 0) {
+    //         basket.setButtonState()
+    //     }
+    // };
 
     setAddress(value: string): void {
         this.order.address = value;

@@ -35,8 +35,8 @@ export class Basket extends Component<IBasketView> {
     }
 
     set items(items: IProduct[]) {
+        this._list.replaceChildren();
         if (items.length) {
-            this._list.replaceChildren();
             const cardBasketPreviewTemplate = ensureElement<HTMLTemplateElement>('#card-basket');
             items.forEach((item, index) => {
                 const basketItem = new BasketItem(cloneTemplate(cardBasketPreviewTemplate), {
@@ -50,14 +50,19 @@ export class Basket extends Component<IBasketView> {
                 this._list.append(basketItemNode);
             })
         }
+        this.setButtonState(items);
     }
 
     set total(total: number) {
         this.setText(this._total, total + ' синапсов');
     }
 
-    setButtonState() {
-        this._button.setAttribute('disabled', '');
+    setButtonState(items: IProduct[]) {
+        if (items.length === 0) {
+            this._button.setAttribute('disabled', '');
+        } else {
+            this._button.removeAttribute('disabled');
+        }
     }
 }
 

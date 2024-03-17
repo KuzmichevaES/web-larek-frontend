@@ -24,11 +24,11 @@ const basketTemplate = ensureElement<HTMLTemplateElement>('#basket');
 const orderFormTemplate = ensureElement<HTMLTemplateElement>('#order');
 const orderFormContactTemplate = ensureElement<HTMLTemplateElement>('#contacts'); 
 const successTemplate = ensureElement<HTMLTemplateElement>('#success'); 
-const basket = new Basket(cloneTemplate(basketTemplate), events);
 
 const appData = new AppState({}, events);
 const order = new OrderPaymentAddress (cloneTemplate(orderFormTemplate), events);
 const orderContact = new OrderContact (cloneTemplate(orderFormContactTemplate), events);
+const basketView = new Basket(cloneTemplate(basketTemplate), events);
 
 events.on<CatalogChangeEvent>('items:changed', () => {
     page.catalog = appData.catalog.map(item => {
@@ -77,16 +77,28 @@ events.on('card:addedToBasket', (item: IProduct) => {
 
 events.on('card:removeFromBasket', (item: IProduct) => {
     appData.removeFromBasket(item.id);
-    const basket = new Basket(cloneTemplate(basketTemplate), events);
-    appData.setBasket(modal, basket);
+    //const basket = new Basket(cloneTemplate(basketTemplate), events);
+    //appData.setBasket(modal, basket);
+    modal.render({
+        content: basketView.render({
+            items: appData.basket,
+            total: appData.getTotal()
+            })
+    });
 });
 
-events.on('itemsListBasket: changed', (basket: IProduct[]) => {
-    page.counter = Object.keys(basket).length;
+events.on('itemsListBasket: changed', (basketList: IProduct[]) => {
+    page.counter = Object.keys(basketList).length;
+    appData.basket = basketList;
 });
 
 events.on('basket:open', () => {
-    appData.setBasket(modal, basket);
+    modal.render({
+        content: basketView.render({
+            items: appData.basket,
+            total: appData.getTotal()
+        })
+    });
 });
 
 events.on('order:open', () => {
